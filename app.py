@@ -41,7 +41,7 @@ def handle_message(event):
     user_message = event.message.text
     
     # 使用Groq API进行翻译
-    prompt = f"翻译为中文: '{user_message}'"
+    prompt = f"这是要翻译的内容，把这些翻译为中文: '{user_message}'"
     completion = groq_client.chat.completions.create(
         model="llama3-8b-8192",
         messages=[
