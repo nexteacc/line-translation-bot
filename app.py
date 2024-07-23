@@ -17,6 +17,14 @@ handler = WebhookHandler(os.getenv('LINE_CHANNEL_SECRET'))
 # Groq API配置
 groq_client = groq.Client(api_key=os.getenv('GROQ_API_KEY'))
 
+@app.route("/")
+def home():
+    return "Hello, this is the home page!"
+
+@app.route('/favicon.ico')
+def favicon():
+    return '', 204
+
 @app.route("/callback", methods=['POST'])
 def callback():
     signature = request.headers['X-Line-Signature']
