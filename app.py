@@ -24,6 +24,7 @@ def callback():
     try:
         handler.handle(body, signature)
     except InvalidSignatureError:
+        print("Invalid signature. Check your channel access token/channel secret.")
         abort(400)
     return 'OK'
 
@@ -49,4 +50,5 @@ def handle_message(event):
     )
 
 if __name__ == "__main__":
-    app.run()
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
