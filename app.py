@@ -38,18 +38,7 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    user_message = event.message.text.strip()  # 使用 strip() 方法去除首尾空白字符
-    # 预处理和验证
-    if not user_message:
-        return send_error_message(event, "输入内容不能为空，请重新输入。")
-
-    if len(user_message) > 2000:
-        return send_error_message(event, "输入内容过长，请简化后再试。")
-
-    detected_lang = detect_language(user_message)
-    if detected_lang == 'zh':
-        return send_error_message(event, "请输入其他语言内容以进行翻译。")
-
+    user_message = event.message.text
     # 使用Groq API进行翻译
     prompt = f"请将以下文本翻译为中文'{user_message}'"
     completion = groq_client.chat.completions.create(
