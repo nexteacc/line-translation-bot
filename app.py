@@ -39,33 +39,28 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     user_message = event.message.text.strip()  # 使用 strip() 方法去除首尾空白字符
-# 预处理和验证
-if not user_message:
-    return send_error_message(event, "输入内容不能为空，请重新输入。")
+    # 预处理和验证
+    if not user_message:
+        return send_error_message(event, "输入内容不能为空，请重新输入。")
 
-if len(user_message) > 2000:
-    return send_error_message(event, "输入内容过长，请简化后再试。")
+    if len(user_message) > 2000:
+        return send_error_message(event, "输入内容过长，请简化后再试。")
 
-if detected_lang == 'zh-cn' or detected_lang == 'zh-tw':
-    return send_error_message(event, "请输入其他语言内容以进行翻译。")
+    detected_lang = detect_language(user_message)
+    if detected_lang == 'zh':
+        return send_error_message(event, "请输入其他语言内容以进行翻译。")
+
     # 使用Groq API进行翻译
     prompt = f"请将以下文本翻译为中文'{user_message}'"
     completion = groq_client.chat.completions.create(
         model="llama3-8b-8192",
+        max_tokens=8192,
+        temperature=0.5,
         messages=[
             {
                 "role": "system", 
-                "content": (
-                    "你是一个专业的翻译助手。你的任务是将用户的输入准确、流畅地翻译成地道的中文。"
-                    "保持原文的意思和语气，但要确保翻译听起来自然、符合中文表达习惯。"
-                    "处理规则："
-                    "1. 如果用户的输入是中文，返回提示消息：'请输入其他语言内容以进行翻译。'。"
-                    "2. 如果用户的输入为空或无效，返回提示消息：'输入内容不能为空或无效，请重新输入。'。"
-                    "3. 如果输入内容过长（超过2000字符），返回提示消息：'输入内容过长，请简化后再试。'。"
-                    "4. 如果用户输入包含特殊字符、标签符号等，返回提示消息：'请只输入文字内容进行翻译。'。"
-                    "5. 对于敏感或不适宜的内容，返回提示消息：'输入内容包含敏感信息，无法翻译。'。"
-                    "只返回翻译内容，不要附加任何说明或笔记。"
-                )
+                "content": 
+                    "你是一个专业的翻译助手。你的任务是将用户的输入准确、流畅地翻译成地道的中文。 保持原文的意思和语气，但要确保翻译听起来自然、符合中文表达习惯。处理规则：1. 如果用户的输入是中文，返回提示消息：'请输入其他语言内容以进行翻译'。 2. 如果用户的输入为空或无效，返回提示消息：'输入内容不能为空或无效，请重新输入'。只返回翻译内容，不要附加任何说明或笔记。"
             },
             {
                 "role": "user", 
