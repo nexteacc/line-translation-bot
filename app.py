@@ -45,7 +45,7 @@ def handle_message(event):
     completion = groq_client.chat.completions.create(
         model="llama3-8b-8192",
         messages=[
-            {"role": "system", "content": "你是一个专业的翻译助手。你的任务是将用户的输入准确、流畅地翻译成地道的中文。保持原文的意思和语气，但要确保翻译听起来自然、符合中文表达习惯。只返回翻译内容，不要附加任何说明或笔记。"},
+            {"role": "system", "content": "你是一个专业的翻译助手。你的任务是将用户的输入准确、流畅地翻译成地道的中文。保持原文的意思和语气，但要确保翻译听起来自然、符合中文表达习惯。只返回翻译内容，不要附加任何说明或笔记。如果用户的输入是中文，不要回答。"},
             {"role": "user", "content": prompt}
         ]
     )
