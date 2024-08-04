@@ -42,9 +42,9 @@ def handle_message(event):
     # 使用Groq API进行翻译
     prompt = f"请将以下文本翻译为中文'{user_message}'"
     completion = groq_client.chat.completions.create(
-        model="llama3-8b-8192",
+        model="mixtral-8x7b-32768",
         max_tokens=8192,
-        temperature=0.5,
+        temperature=0.2,
         messages=[
             {
                 "role": "system", 
